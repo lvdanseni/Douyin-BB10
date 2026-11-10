@@ -1,4 +1,5 @@
 # Douyin-BB10
+App为黑莓bb10原生抖音客户端，有AI构建仅供个人学习
 
 > BB10 抖音客户端 —— 基于 BlackBerry 10 Cascades 1.1 / Qt 4.8 的原生抖音客户端
 

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<qnx>
+    <!-- 【应用标识】不要改 id。改了等于换一个应用：桌面图标变成新的，
+         沙盒目录也换掉，cookie / 下载的视频 / 设置全部读不到。 -->
+    <id>com.doubao.douyin</id>
+    <!-- 【改名】抖音原生客户端，显示名统一叫 Douyin。
+         <name> 是安装器/桌面显示的名字，<initialWindow title> 是运行时窗口标题，
+         两处必须一起改，否则桌面叫 Douyin、任务切换器里还写着旧名。 -->
+    <name>Douyin</name>
+    <!-- 【版本号】唯一数据源：build.sh 会从这里读出 versionNumber + buildId，
+         生成 src/app_version.hpp，设置页显示的版本号就是拼出来的 "1.0.0.N"。
+         以后每迭代一版只需要改下面的 buildId（+1），不用再动 C++/QML。 -->
+    <versionNumber>1.0.0</versionNumber>
+    <buildId>58</buildId>
+    <entryPointType>Qnx/Cascades</entryPointType>
+    <description>Douyin - a native Douyin client for BlackBerry 10. Built with Cascades after reverse-engineering the BBTube architecture. Tabs: Home / Feed / Player / Login / Settings.</description>
+    <author>Doubao</author>
+
+    <initialWindow system="true" principal="true" title="Douyin" icon="icon.png"/>
+    <asset path="icon.png">icon.png</asset>
+    <asset path="o.le-v7/BiliClient.so" entry="true" type="Qnx/Elf">BiliClient.so</asset>
+    <asset path="o.le-v7/assets">assets</asset>
+    <!-- BBTube 逆向复用的流式播放后端：libbbplayer.so（OpenMAX AL + 静态 FFmpeg）
+         配合 libbbnet.so（curl 流式 reader）。落到 app/native/lib（LD_LIBRARY_PATH 已含），
+         VideoPlayer 在运行时 dlopen 它们，绕开系统 mmrenderer 实现真·不落盘流式播放。 -->
+    <asset path="o.le-v7/libbbplayer.so" type="Qnx/Elf">lib/libbbplayer.so</asset>
+    <asset path="o.le-v7/libbbnet.so" type="Qnx/Elf">lib/libbbnet.so</asset>
+
+    <!-- 【启动图标】必须是 <icon><image>…</image></icon> 结构（NDK 样例
+         target/qnx6/usr/share/samples/cascades/hellocascades/bar-descriptor.xml:60）。
+         1.0.0.54 之前写成裸文本 <icon>icon.png</icon>，打包器识别不到，
+         悄悄把 MANIFEST 的 Entry-Point-Icon 指到自带的
+         blackberry-tablet-default-icon.png —— 源文件换了也没用，桌面仍是默认图标。
+         GATE-DS 在构建期校验结构，打包后再校验 BAR 内 Entry-Point-Icon。 -->
+    <icon>
+        <image>icon.png</image>
+    </icon>
+
+    <action system="true">run</action>
+    <action system="true">pause</action>
+    <action system="true">resume</action>
+    <action system="true">open</action>
+    <action system="true">close</action>
+
+    <permission system="true">run_native</permission>
+    <permission>access_internet</permission>
+
+    <env var="LD_LIBRARY_PATH" value="app/native/lib:/usr/lib/qt4/lib"/>
+    <!-- 【设计规范 v1.0】品牌色唯一事实源 design/tokens.json brand.accent。
+         旧值 0xFB7299 是 BiliBar 的哔哩粉，与抖音红 #FE2C55 不一致；
+         GATE-DS 会拿本行与 tokens.json 比对，漂移即拒绝打包。 -->
+    <env var="CASCADES_THEME" value="dark?primaryColor=0xFE2C55&amp;primaryBase=0xFE2C55"/>
+</qnx>

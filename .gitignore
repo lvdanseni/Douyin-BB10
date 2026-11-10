@@ -1,0 +1,28 @@
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+
+# 临时和日志文件
+*.log
+*.flag
+*.tmp
+
+# 构建输出目录
+o.le-v7/
+barcheck/
+verify23/
+gate5tmp/
+
+# BAR 安装包（上传至 GitHub Releases，不提交到仓库）
+*.bar
+
+# 系统文件
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 编译产物
+Makefile~
+*.o
+*.so
